@@ -1,3 +1,6 @@
+
+
+
 ## importing all the necessary modules
 
 import numpy as np
@@ -69,3 +72,48 @@ new_coordinates2 = np.matmul(vectors2, x_std.T)
 ## importing training data of MNIST dataset
 
 df = pd.read_csv('train.csv')
+new_df = df.drop('label', axis=1)
+recon_df = new_df
+labels = df['label']
+
+
+## function returning original images of number #
+
+def org_image(digit):
+    x2 = new_df.loc[digit-1].values.reshape(28,28)
+    plt.imshow(x2, cmap='pink')
+    
+## showing original iamge of digit #4
+org_image(4)
+
+
+## function returning Mean Squared Error (MSE) for digit # for # PCA component
+
+def MSE_error(digit, pca_com):
+    x2 = new_df.loc[digit-1].values.reshape(28,28)
+    x3 = standardized_scalar.fit_transform(x2)
+    #print(x3.shape)
+    pca = PCA(n_components = pca_com)
+    X_re = pca.fit_transform(x3)
+    X_rec = pca.inverse_transform(X_re)
+    # print(X_rec.shape)
+    print(f'MSE error for PCA: {sklearn.metrics.mean_squared_error(x3,X_rec)}')
+
+## example case for digit "4" with "10" PCA
+
+MSE_error(7,10)
+
+## function returning reconstructed images of number # with # of PCA components
+
+def rec_image(digit, pca_com):
+    x2 = new_df.loc[digit-1].values.reshape(28,28)
+    x3 = standardized_scalar.fit_transform(x2)
+    #print(x3.shape)
+    pca = PCA(n_components = pca_com)
+    X_re = pca.fit_transform(x3)
+    X_rec = pca.inverse_transform(X_re)
+    
+    plt.title("Reconstructed Image of #%i" %digit)
+    plt.imshow(X_rec, cmap='pink')
+## example case for digit "4" with "10" PCA
+rec_image(4, 10)
