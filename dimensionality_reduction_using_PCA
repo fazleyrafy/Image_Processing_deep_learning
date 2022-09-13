@@ -1,1 +1,71 @@
+## importing all the necessary modules
 
+import numpy as np
+import sklearn.datasets, sklearn.decomposition
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.decomposition import PCA
+import tensorflow as tf
+from scipy.linalg import eigh
+from sklearn.preprocessing import StandardScaler
+
+
+## load the mnist dataset and assign tringing and test data
+(x_train, y_train), ((x_test, y_test)) = tf.keras.datasets.mnist.load_data()
+
+## Data Preprocessing
+(x_train,y_train), (x_test,y_test) = tf.keras.datasets.mnist.load_data()
+
+## Before applying PCA, we need to convert mean=0 and standard deviation=1 for each variable
+
+x = x_train.reshape(-1,28*28)
+x = x/255.0
+mean = np.mean(x,axis=0)
+x_std = x - mean
+covariance = np.cov(x_std.T)
+
+## Compute eigenvalues and eigenvectors for different eigen values and corresponding eigen vectors (considering the largest ones)
+
+eig_val30, eig_vec30 = eigh(covariance,eigvals = (783-29,783))
+eig_val20, eig_vec20 = eigh(covariance,eigvals = (783-19,783))
+eig_val5, eig_vec5 = eigh(covariance,eigvals = (783-4,783))
+eig_val2, eig_vec2 = eigh(covariance,eigvals = (782,783))
+
+## ploting only the top 30 eigen vectors
+rows, cols = 6, 5
+axes=[]
+fig=plt.figure(1,figsize=(10,10))
+for i in range(rows*cols):
+    v = eig_vec30[:,-(i+1)]
+    axes.append(fig.add_subplot(rows, cols, i+1) )
+    subplot_title=("Vector"+str(i+1))
+    axes[-1].set_title(subplot_title)
+    plt.imshow(v.reshape(28,28), cmap='pink')
+fig.tight_layout()
+plt.show()
+
+## plotting the top 30 eigenvalues
+
+x_ax = np.arange(0,30)
+
+plt.plot(x_ax, eig_val30, color='green', linestyle='dashed', linewidth = 3,
+         marker='o', markerfacecolor='blue', markersize=5)
+plt.title("Top 30 Eigenvalues")
+plt.xlabel("index")
+plt.ylabel("EigenValues")
+plt.show()
+
+## Projecting the original data sample on the plane formed by 30, 20, 5, and two principal eigenvectors by vector-vector multiplication
+
+vectors30 = eig_vec30.T
+new_coordinates20 = np.matmul(vectors20, x_std.T)
+vectors20 = eig_vec20.T
+new_coordinates10 = np.matmul(vectors10, x_std.T)
+vectors5 = eig_vec5.T
+new_coordinates5 = np.matmul(vectors5, x_std.T)
+vectors2 = eig_vec2.T
+new_coordinates2 = np.matmul(vectors2, x_std.T)
+
+## importing training data of MNIST dataset
+
+df = pd.read_csv('train.csv')
