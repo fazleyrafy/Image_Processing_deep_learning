@@ -1,4 +1,14 @@
-
+/*
+*
+* @author MFRafy
+*
+* created on 13 September, 2022
+* The 10-class digits in MNIST training-dataset has been used to perform PCA using python 
+* In the following you will find the source code to Display all 30 eigenvectors as images and to plot  top 30 eigenvlaues
+* Defined funtions that takes any digits (single digit) and number of PCA eigen vectors to compare the original and reconstructed images of the digit with the
+* Mean Squared Error (MSE) of the corresponding digit
+*
+*/
 
 
 ## importing all the necessary modules
