@@ -16,7 +16,7 @@ num_epochs = 15
 
 class KSOFM():
     ## Decalring the variables and values associated
-    def __init__(self, m=3, n=3, dim=3, lr=1, sigma=1):
+    def __init__(self, m, n, dim, lr=1, sigma=1):
         self.m = m
         self.n = n
         self.dim = dim
@@ -89,8 +89,9 @@ class KSOFM():
         return self.weights.reshape(self.m, self.n, self.dim)
     ## training the input dataset
     def Train():
-        mean = (0.1307, )
-        std = (0.3081, )
+        # random mean and standard deviation values
+        mean = (0.15, )
+        std = (0.35, )
         train_trans = transforms.Compose([transforms.RandomRotation((0, 5), fill=(0, )),])
         dataset = torchvision.datasets.MNIST(root=data_dir, train=True, download=True)
         images = []
@@ -99,7 +100,7 @@ class KSOFM():
             images.append(img)
         images = np.array(images)
         images = images.reshape(images.shape[0], 784)
-        model = SOM(m=1, n=40, dim=784)
+        model = KSOFM(m=1, n=40, dim=784)
         model.fit(images, epochs=num_epochs)
         centers = model.cluster_centers_.squeeze(axis=0)
         iter = 0
