@@ -24,7 +24,7 @@ class KSOFM():
         self.initial_lr = lr
         self.lr = lr
         self.sigma = sigma
-        self.half_size = 16
+        self.half_size = 31
         rng = np.random.default_rng(seed=61)
         self.weights = rng.normal(size=(m * n, dim))
         self._locations = self._get_locations(m, n)
@@ -37,9 +37,9 @@ class KSOFM():
         x_stack = np.stack([x]*(self.m*self.n), axis=0)
         distance = np.linalg.norm(x_stack - self.weights, axis=1)
         return np.argmin(distance)
-    ## 
+    ## performing exponential neighborhood decay and updaitng the weights with bmu
     def step(self, x, ti, gi):
-        decay_iter = int(ti / 16)
+        decay_iter = int(ti / 31)
         x_stack = np.stack([x]*(self.m*self.n), axis=0)
         bmu_index = self._find_bmu(x)
         bmu_location = self._locations[bmu_index,:]
@@ -59,7 +59,8 @@ class KSOFM():
         local_multiplier = np.stack([local_step]*(self.dim), axis=1)
         delta = local_multiplier * (x_stack - self.weights)
         self.weights += delta
-    
+        
+    ## fitting the data for each iteration
     def fit(self, X, epochs=1, shuffle=True):
         global_iter_counter = 0
         n_samples = X.shape[0]
@@ -77,6 +78,7 @@ class KSOFM():
                 self.lr = (1 - (global_iter_counter / total_iterations)) * self.initial_lr
         self._trained = True
         return
+    
     def transform(self, X):
         X_stack = np.stack([X]*(self.m*self.n), axis=1)
         cluster_stack = np.stack([self.weights]*X.shape[0], axis=0)
@@ -85,6 +87,7 @@ class KSOFM():
     @property
     def cluster_centers_(self):
         return self.weights.reshape(self.m, self.n, self.dim)
+    ## training the input dataset
     def Train():
         mean = (0.1307, )
         std = (0.3081, )
