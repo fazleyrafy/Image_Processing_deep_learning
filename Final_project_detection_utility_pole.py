@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # import imghdr    ## determines the type of image
 
+# dataset can be found in the main directory as a zip file
 dataset_dir = '/home/jarvis/programming/neural_net_final/5G-Utility-Pole-Planner/Data'
 os.listdir(dataset_dir)
 # os.listdir(os.path.join(dataset_dir, 'poles'))
